@@ -1,4 +1,4 @@
-name: Uptime Monitor
+name: Uptime Monitor Service
 
 on:
   workflow_dispatch:
