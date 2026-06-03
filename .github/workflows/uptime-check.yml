@@ -1,10 +1,9 @@
-name: Uptime Monitor Service
+name: Uptime Monitor Service Test
 
 on:
-  workflow_dispatch:
-
   schedule:
     - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 jobs:
   monitor:
