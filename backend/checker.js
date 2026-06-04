@@ -13,50 +13,70 @@ const supabase = createClient(
   SUPABASE_SERVICE_KEY
 );
 
-const URLS = [
-  "https://github.com",
-  "https://www.wikipedia.org",
-  "https://www.cloudflare.com",
-  "https://supabase.com"
-];
+async function getMonitoredSites() {
+  const { data, error } = await supabase
+    .from("monitored_sites")
+    .select("*")
+    .eq("active", true);
 
-async function checkSite(url) {
+  if (error) {
+    console.error(
+      "Failed to load monitored sites:",
+      error
+    );
+    process.exit(1);
+  }
+
+  return data;
+}
+
+async function checkSite(site) {
   const start = Date.now();
 
   try {
-    const response = await axios.get(url, {
+    const response = await axios.get(site.url, {
       timeout: 15000,
       validateStatus: () => true,
       headers: {
-      "User-Agent": "UptimeMonitor/1.0"
-      }
+        "User-Agent": "UptimeMonitor/1.0",
+      },
     });
 
     const latency = Date.now() - start;
 
     return {
-      url,
+      url: site.url,
       status_code: response.status,
       latency_ms: latency,
-      is_up: response.status >= 200 && response.status < 400
+      is_up:
+        response.status >= 200 &&
+        response.status < 400,
     };
-  } catch (err) {
+  } catch (error) {
     const latency = Date.now() - start;
 
     return {
-      url,
+      url: site.url,
       status_code: 0,
       latency_ms: latency,
-      is_up: false
+      is_up: false,
     };
   }
 }
 
 async function main() {
+  const sites =
+    await getMonitoredSites();
+
+  console.log(
+    `Monitoring ${sites.length} sites`
+  );
+
   const results = [];
 
-  for (const url of URLS) {
-    const result = await checkSite(url);
+  for (const site of sites) {
+    const result =
+      await checkSite(site);
 
     console.log(result);
 
@@ -72,7 +92,9 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Inserted successfully");
+  console.log(
+    `Inserted ${results.length} records`
+  );
 }
 
 main();

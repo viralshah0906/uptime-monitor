@@ -107,3 +107,40 @@ select {
   padding: 50px;
   font-size: 24px;
 }
+
+.site-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.site-form input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  min-width: 220px;
+}
+
+.site-form button,
+.managed-row button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.managed-list {
+  margin-bottom: 40px;
+}
+
+.managed-row {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
