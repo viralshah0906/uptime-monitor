@@ -14,10 +14,10 @@ const supabase = createClient(
 );
 
 const URLS = [
-  "https://google.com",
   "https://github.com",
-  "https://stackoverflow.com",
-  "https://openai.com"
+  "https://www.wikipedia.org",
+  "https://www.cloudflare.com",
+  "https://supabase.com"
 ];
 
 async function checkSite(url) {
@@ -26,7 +26,10 @@ async function checkSite(url) {
   try {
     const response = await axios.get(url, {
       timeout: 15000,
-      validateStatus: () => true
+      validateStatus: () => true,
+      headers: {
+      "User-Agent": "UptimeMonitor/1.0"
+      }
     });
 
     const latency = Date.now() - start;
@@ -34,7 +37,8 @@ async function checkSite(url) {
     return {
       url,
       status_code: response.status,
-      latency_ms: latency
+      latency_ms: latency,
+      is_up: response.status >= 200 && response.status < 400
     };
   } catch (err) {
     const latency = Date.now() - start;
@@ -42,7 +46,8 @@ async function checkSite(url) {
     return {
       url,
       status_code: 0,
-      latency_ms: latency
+      latency_ms: latency,
+      is_up: false
     };
   }
 }
