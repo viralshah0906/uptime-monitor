@@ -144,3 +144,40 @@ select {
   justify-content: space-between;
   align-items: center;
 }
+
+.navbar {
+  background: #111827;
+  padding: 16px 24px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: 1px solid #334155;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar a:hover {
+  opacity: 0.8;
+}
+
+.logout-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
