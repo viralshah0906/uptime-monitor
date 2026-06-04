@@ -1,4 +1,4 @@
-name: Uptime Monitor Service Test
+name: Uptime Monitor Service
 
 on:
   schedule:
