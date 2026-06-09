@@ -196,3 +196,54 @@ select {
   display: flex;
   gap: 10px;
 }
+
+.site-card p {
+  margin: 8px 0;
+}
+
+.site-card p:last-child {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.site-link {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+}
+
+.site-link:hover {
+  transform: translateY(-3px);
+}
+
+.back-link {
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.checks-table {
+  overflow-x: auto;
+}
+
+.checks-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.checks-table th,
+.checks-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.checks-table tr {
+  border-bottom: 1px solid #334155;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import SiteDetails from "./pages/SiteDetails";
 
 export default function App() {
   return (
@@ -26,6 +27,11 @@ export default function App() {
           element={<Login />}
         />
 
+        <Route
+          path="/site/:id"
+          element={<SiteDetails />}
+        />
+        
         <Route
           path="/admin"
           element={

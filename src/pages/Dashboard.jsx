@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import {
   ResponsiveContainer,
@@ -22,13 +23,36 @@ export default function Dashboard() {
     useState("7d");
 
   async function fetchLogs() {
-    const { data, error } = await supabase
-      .from("site_logs")
-      .select("*")
-      .order("checked_at", {
-        ascending: true,
-      })
-      .limit(500);
+    const now = new Date();
+
+    let days = 7;
+
+    if (range === "24h") {
+      days = 1;
+    } else if (range === "30d") {
+      days = 30;
+    }
+
+    const cutoff = new Date(
+      now.getTime() -
+        days *
+          24 *
+          60 *
+          60 *
+          1000
+    ).toISOString();
+
+    const { data, error } =
+      await supabase
+        .from("site_logs")
+        .select("*")
+        .gte(
+          "checked_at",
+          cutoff
+        )
+        .order("checked_at", {
+          ascending: true,
+        });
 
     if (!error) {
       setLogs(data || []);
@@ -65,7 +89,7 @@ export default function Dashboard() {
 
     return () =>
       clearInterval(timer);
-  }, []);
+  }, [range]);
 
   const sites = useMemo(() => {
     return [
@@ -155,51 +179,15 @@ export default function Dashboard() {
   }
 
   const chartData = useMemo(() => {
-    const now = new Date();
-
-    let cutoff;
-
-    if (range === "24h") {
-      cutoff =
-        now.getTime() -
-        24 *
-          60 *
-          60 *
-          1000;
-    } else if (
-      range === "7d"
-    ) {
-      cutoff =
-        now.getTime() -
-        7 *
-          24 *
-          60 *
-          60 *
-          1000;
-    } else {
-      cutoff =
-        now.getTime() -
-        30 *
-          24 *
-          60 *
-          60 *
-          1000;
-    }
-
     return logs
       .filter(
         (row) =>
-          row.url ===
-            selectedSite &&
-          new Date(
-            row.checked_at
-          ).getTime() >= cutoff
+          row.url === selectedSite
       )
       .map((row) => {
-        const date =
-          new Date(
-            row.checked_at
-          );
+        const date = new Date(
+          row.checked_at
+        );
 
         return {
           label:
@@ -207,10 +195,8 @@ export default function Dashboard() {
               ? date.toLocaleTimeString(
                   [],
                   {
-                    hour:
-                      "2-digit",
-                    minute:
-                      "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
                   }
                 )
               : date.toLocaleDateString(),
@@ -296,9 +282,15 @@ export default function Dashboard() {
         <div className="site-grid">
           {latestSites.map(
             (site) => (
-              <div
+              <Link
                 key={site.url}
-                className="site-card"
+                className="site-card site-link"
+                to={`/site/${
+                  managedSites.find(
+                    (s) =>
+                      s.url === site.url
+                  )?.id
+                }`} 
               >
                 <h3>
                   {getSiteName(
@@ -344,7 +336,15 @@ export default function Dashboard() {
                   )}
                   %
                 </p>
-              </div>
+
+                <p>
+                  Last Check:
+                  {" "}
+                  {new Date(
+                    site.checked_at
+                  ).toLocaleString()}
+                </p>
+              </Link>
             )
           )}
         </div>
