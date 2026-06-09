@@ -60,6 +60,26 @@ export default function Admin() {
     loadSites();
   }
 
+  async function deleteSite(site) {
+    const confirmed = window.confirm(
+      `Delete "${site.name}"?`
+    );
+
+    if (!confirmed) return;
+
+    const { error } = await supabase
+      .from("monitored_sites")
+      .delete()
+      .eq("id", site.id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    loadSites();
+  }
+
   return (
     <div className="dashboard">
       <h1>Admin Panel</h1>
@@ -103,15 +123,26 @@ export default function Admin() {
               {site.url}
             </div>
 
-            <button
-              onClick={() =>
-                toggle(site)
-              }
-            >
-              {site.active
-                ? "Disable"
-                : "Enable"}
-            </button>
+            <div className="action-buttons">
+              <button
+                onClick={() =>
+                  toggle(site)
+                }
+              >
+                {site.active
+                  ? "Disable"
+                  : "Enable"}
+              </button>
+
+              <button
+                className="delete-btn"
+                onClick={() =>
+                  deleteSite(site)
+                }
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
